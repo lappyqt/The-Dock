@@ -1,5 +1,6 @@
 const { ipcRenderer } = require('electron');
 
+
 export class AppBar {
     constructor(container) {
         this.container = container;
@@ -8,6 +9,10 @@ export class AppBar {
 
     #openApp(path) {
         ipcRenderer.invoke('openApp', path);
+    }
+
+    #extractIcon(path) {
+        ipcRenderer.invoke('extractIcon', path);
     }
 
     #allowDragAndDrop() {
@@ -25,17 +30,40 @@ export class AppBar {
             event.stopPropagation();
             event.preventDefault();
 
-            this.addApp(
+            this.#extractIcon(event.dataTransfer.files[0].path);
+
+            this.#addApp(
                 event.dataTransfer.files[0].name.replace('.exe', '').toLowerCase(),
                 event.dataTransfer.files[0].path);
         }
     }
 
-    addApp(name, path) {
+    #addApp(name, path) {
         const app = document.createElement('li');
-        app.innerHTML = name;
         app.onmousedown = () => this.#openApp(path);
         app.setAttribute('path', path);
+        app.setAttribute('title', name);
+
+        const appIcon = document.createElement('img');
+
+        setTimeout(() => {
+            appIcon.src = `file:///${process.cwd()}\\src\\icons\\${name}.png`;
+            app.append(appIcon);
+
+            this.container.appendChild(app);
+        }, 450);
+    }
+
+    #recoverApp(name, path) {
+        const app = document.createElement('li');
+        app.onmousedown = () => this.#openApp(path);
+        app.setAttribute('path', path);
+        app.setAttribute('title', name);
+
+        const appIcon = document.createElement('img');
+        appIcon.src = `file:///${process.cwd()}\\src\\icons\\${name}.png`;
+        app.append(appIcon);
+
         this.container.appendChild(app);
     }
 
@@ -43,7 +71,7 @@ export class AppBar {
         const appData = JSON.parse(localStorage.getItem('app-data'));
 
         for (let i = 0; i < appData.length; i++) {
-            this.addApp(appData[i].name, appData[i].path);
+            this.#recoverApp(appData[i].name, appData[i].path);
         }
     }
 
@@ -52,7 +80,7 @@ export class AppBar {
 
         for (let item of this.container.children) {
             let appData = {
-                name: item.innerHTML,
+                name: item.title,
                 path: item.getAttribute('path')
             };
 

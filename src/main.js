@@ -2,6 +2,7 @@ const electron = require('electron');
 const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 const exec = require('child_process').execFile;
+const iconExtractor = require('file-icon-extractor');
 
 app.on('ready', createMainWindow);
 
@@ -10,8 +11,8 @@ function createMainWindow() {
     const width = display.bounds.width;
     const height = display.bounds.height;
     const windowSize = {
-        width: 650,
-        height: 60
+        width: 490,
+        height: 54
     }
 
     const mainWindow = new BrowserWindow({
@@ -20,7 +21,7 @@ function createMainWindow() {
         frame: false,
         autoHideMenuBar: true,
         transparent: true,
-        resizable: false,
+        resizable: true,
         movable: false,
 
         webPreferences: {
@@ -36,8 +37,12 @@ function createMainWindow() {
 
     mainWindow.loadFile('./src/web-part/index.html');
     mainWindow.setPosition(width / 2 - windowSize.width / 2, height - windowSize.height - 20);
-}
 
-ipcMain.handle('openApp', async (event, path) => {
-    exec(path);
-});
+    ipcMain.handle('openApp', async (event, path) => {
+        exec(path);
+    });
+
+    ipcMain.handle('extractIcon', async(event, path) => {
+        iconExtractor.extract(path, `${__dirname}\\icons`);
+    }); 
+}

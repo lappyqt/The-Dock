@@ -17,7 +17,7 @@ html, body {
     height: 100%;
     z-index: 999;
     background-color: transparent;
-    border-radius: 14px;
+    border-radius: 12px;
     background-color: white;
     -webkit-app-region: drag;
     font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
@@ -42,18 +42,16 @@ button {
 
 #app-bar > li {
     user-select: none;
-    background-color: #60dda4;
-    color: #026969;
-    font-size: 16px;
-    font-weight: 400;
-    cursor: pointer;
-    padding: 7px 14px;
-    border-radius: 10px;
-    margin-right: 10px;
+    margin-right: 15px;
+    transition: all 0.2s;
     display: flex;
-    text-align: center;
+    align-items: center;
+}
+
+#app-bar > li > img {
+    image-rendering: optimizeQuality;
 }
 
 #app-bar > li:hover {
-    background-color: #40e99d;
+    transform: translateY(-4px);
 }

@@ -1,6 +1,6 @@
 {
   "name": "the-dock",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple dock for all platforms.",
   "main": "src/main.js",
   "scripts": {
@@ -9,6 +9,7 @@
   "author": "lappyqt",
   "license": "MIT",
   "dependencies": {
-    "electron": "^18.2.0"
+    "electron": "^18.2.0",
+    "file-icon-extractor": "^1.0.4"
   }
 }
